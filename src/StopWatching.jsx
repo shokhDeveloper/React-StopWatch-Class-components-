@@ -6,7 +6,8 @@ class StopWatching extends Component{
         minut: 0,
         seconds: 0,
         btnDisabled: false,
-        interval: ""
+        interval: "",
+        intervalStorage: []
     }
     handleStart = () => {
         this.setState({
@@ -49,7 +50,26 @@ class StopWatching extends Component{
             btnDisabled: false
         })
     }
+    handleInterval = () => {
+        const {hours, minut, seconds, intervalStorage, btnDisabled} = this.state
+        if(btnDisabled === true){
+            this.setState({
+                intervalStorage: [...intervalStorage, `${hours}:${minut}:${seconds}`]
+            })
+        }
+    }
+    handleClear = () => {
+        this.setState({
+            interval: clearInterval(this.state.interval),
+            hours: 0,
+            minut: 0,
+            seconds: 0,
+            intervalStorage: [],
+            btnDisabled: false
+        })
+    }
     render(){
+        const {intervalStorage } = this.state
         return(
             <div className="stop__watching">
                 <div className="container">
@@ -66,9 +86,20 @@ class StopWatching extends Component{
                     <ul className="watching__btns">
                         <li><button className="btn border-transparent" onClick={this.handleStart} disabled={this.state.btnDisabled}>Start</button></li>
                         <li><button className="btn border-transparent" onClick={this.handleStop}>Stop</button></li>
-                        <li><button className="btn border-transparent">InTerval</button></li>
-                        <li><button className="btn border-transparent">Clear</button></li>
+                        <li><button className="btn border-transparent" onClick={this.handleInterval}>InTerval</button></li>
+                        <li><button className="btn border-t ransparent" onClick={this.handleClear}>Clear</button></li>
                     </ul>
+                    <div className="watching__interval">
+                        {intervalStorage?.length ? (
+                            <>
+                                {intervalStorage?.map(item => {
+                                    return(
+                                        <p>{item}</p>
+                                    )
+                                })}
+                            </>
+                        ): <h2>Not interval watch</h2>}
+                    </div>
                 </div>
             </div>
         )
